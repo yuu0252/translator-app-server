@@ -1,13 +1,13 @@
-const express = require("express");
-const mongoose = require("mongoose");
+import express from "express";
+import mongoose from "mongoose";
 
 const app = express();
 const PORT = 8000;
 require("dotenv").config();
 
-const CryptoJS = require("crypto-js");
-const JWT = require("jsonwebtoken");
-const User = require("./src/v1/models/user");
+import CryptoJS from "crypto-js";
+import JWT from "jsonwebtoken";
+import User from "./src/v1/models/user";
 
 app.use(express.json());
 

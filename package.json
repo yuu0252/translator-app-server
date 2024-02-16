@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon ts-node/esm ./index.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,12 @@
     "nodemon": "^3.0.3"
   },
   "devDependencies": {
-    "dotenv": "^16.4.4"
+    "@types/crypto-js": "^4.2.2",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.11.19",
+    "dotenv": "^16.4.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }

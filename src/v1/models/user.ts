@@ -1,4 +1,11 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+
+interface IUser {
+  username: string;
+  email: string;
+  password: string;
+}
+
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -15,4 +22,4 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("User", userSchema);
+export default mongoose.model<IUser>("User", userSchema);
