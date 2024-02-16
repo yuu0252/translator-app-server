@@ -12,12 +12,16 @@ const User = require("./src/v1/models/user");
 app.use(express.json());
 
 // DB接続
-try {
-  mongoose.connect(process.env.MONGODB_URL);
-  console.log("DBとの接続に成功しました!");
-} catch (err) {
-  console.log(err);
-}
+const connectToDatabase = async () => {
+  try {
+    mongoose.connect(process.env.MONGODB_URL);
+    console.log("DBとの接続に成功しました!");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+connectToDatabase();
 
 // ユーザ新規登録
 app.post("/register", async (req, res) => {
@@ -30,6 +34,47 @@ app.post("/register", async (req, res) => {
       expiresIn: "24h",
     });
     return res.status(200).json({ user, token });
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+
+// ログインAPI
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // POSTされたメールアドレスと一致するユーザを探す
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(401).json({
+        errors: {
+          params: "email",
+          message: "メールアドレスが間違っています",
+        },
+      });
+    }
+
+    // パスワードを照合する
+    const decryptedPassword = CryptoJS.AES.decrypt(
+      user.password,
+      process.env.SECRET_KEY
+    ).toString(CryptoJS.enc.Utf8);
+
+    if (decryptedPassword !== password) {
+      return res.status(401).json({
+        errors: {
+          params: "password",
+          message: "パスワードが間違っています",
+        },
+      });
+    }
+
+    const token = JWT.sign({ id: user._id }, process.env.TOKEN_SECRET_KEY, {
+      expiresIn: "24h",
+    });
+
+    return res.status(201).json({ user, token });
   } catch (err) {
     return res.status(500).json(err);
   }
