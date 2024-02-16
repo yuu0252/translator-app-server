@@ -6,8 +6,11 @@ require("dotenv").config();
 
 import CryptoJS from "crypto-js";
 import JWT from "jsonwebtoken";
-import User from "./src/v1/models/user";
+
 import { connectToDatabase } from "./src/v1/controller/connectToDatabase";
+import { validationUser } from "./src/v1/middleWare/validationUser";
+import { body } from "express-validator";
+import User from "./src/v1/models/User";
 
 app.use(express.json());
 
@@ -15,20 +18,44 @@ app.use(express.json());
 connectToDatabase();
 
 // ユーザ新規登録
-app.post("/register", async (req, res) => {
-  const password = req.body.password;
-  try {
-    // パスワードを暗号化してユーザとトークンを返す
-    req.body.password = CryptoJS.AES.encrypt(password, process.env.SECRET_KEY);
-    const user = await User.create(req.body);
-    const token = JWT.sign({ id: user._id }, process.env.TOKEN_SECRET_KEY, {
-      expiresIn: "24h",
+app.post(
+  "/register",
+  body("username")
+    .isLength({ min: 4 })
+    .withMessage("ユーザ名は4文字以上である必要があります"),
+  body("email").isEmail().withMessage("メールアドレスの形式が不正です"),
+  body("password")
+    .isLength({ min: 8 })
+    .withMessage("パスワードは8文字以上である必要があります"),
+  body("confirmPassword")
+    .isLength({ min: 8 })
+    .withMessage("確認用パスワードは8文字以上である必要があります"),
+  body("email").custom((value) => {
+    return User.findOne({ email: value }).then((user) => {
+      if (user) {
+        return Promise.reject("このメールアドレスは既に使用されています");
+      }
     });
-    return res.status(200).json({ user, token });
-  } catch (err) {
-    return res.status(500).json(err);
+  }),
+  validationUser,
+  async (req, res) => {
+    const password = req.body.password;
+    try {
+      // パスワードを暗号化してユーザとトークンを返す
+      req.body.password = CryptoJS.AES.encrypt(
+        password,
+        process.env.SECRET_KEY
+      );
+      const user = await User.create(req.body);
+      const token = JWT.sign({ id: user._id }, process.env.TOKEN_SECRET_KEY, {
+        expiresIn: "24h",
+      });
+      return res.status(200).json({ user, token });
+    } catch (err) {
+      return res.status(500).json(err);
+    }
   }
-});
+);
 
 // ログインAPI
 app.post("/login", async (req, res) => {
