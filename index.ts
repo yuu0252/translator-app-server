@@ -1,5 +1,4 @@
 import express from "express";
-import mongoose from "mongoose";
 
 const app = express();
 const PORT = 8000;
@@ -8,19 +7,11 @@ require("dotenv").config();
 import CryptoJS from "crypto-js";
 import JWT from "jsonwebtoken";
 import User from "./src/v1/models/user";
+import { connectToDatabase } from "./src/v1/controller/connectToDatabase";
 
 app.use(express.json());
 
 // DB接続
-const connectToDatabase = async () => {
-  try {
-    mongoose.connect(process.env.MONGODB_URL);
-    console.log("DBとの接続に成功しました!");
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 connectToDatabase();
 
 // ユーザ新規登録
