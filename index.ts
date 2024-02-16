@@ -11,6 +11,7 @@ import { connectToDatabase } from "./src/v1/controller/connectToDatabase";
 import { validationUser } from "./src/v1/middleWare/validationUser";
 import { body } from "express-validator";
 import User from "./src/v1/models/User";
+import { serverEnv } from "./serverEnv";
 
 app.use(express.json());
 
@@ -42,12 +43,9 @@ app.post(
     const password = req.body.password;
     try {
       // パスワードを暗号化してユーザとトークンを返す
-      req.body.password = CryptoJS.AES.encrypt(
-        password,
-        process.env.SECRET_KEY
-      );
+      req.body.password = CryptoJS.AES.encrypt(password, serverEnv.SECRET_KEY);
       const user = await User.create(req.body);
-      const token = JWT.sign({ id: user._id }, process.env.TOKEN_SECRET_KEY, {
+      const token = JWT.sign({ id: user._id }, serverEnv.TOKEN_SECRET_KEY, {
         expiresIn: "24h",
       });
       return res.status(200).json({ user, token });
@@ -76,7 +74,7 @@ app.post("/login", async (req, res) => {
     // パスワードを照合する
     const decryptedPassword = CryptoJS.AES.decrypt(
       user.password,
-      process.env.SECRET_KEY
+      serverEnv.SECRET_KEY
     ).toString(CryptoJS.enc.Utf8);
 
     if (decryptedPassword !== password) {
@@ -88,7 +86,7 @@ app.post("/login", async (req, res) => {
       });
     }
 
-    const token = JWT.sign({ id: user._id }, process.env.TOKEN_SECRET_KEY, {
+    const token = JWT.sign({ id: user._id }, serverEnv.TOKEN_SECRET_KEY, {
       expiresIn: "24h",
     });
 
