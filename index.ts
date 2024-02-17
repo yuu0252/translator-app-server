@@ -56,45 +56,53 @@ app.post(
 );
 
 // ログインAPI
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+app.post(
+  "/login",
+  body("email").isEmail().withMessage("メールアドレスの形式が不正です"),
+  body("password")
+    .isLength({ min: 8 })
+    .withMessage("パスワードは8文字以上である必要があります"),
+  validationUser,
+  async (req, res) => {
+    const { email, password } = req.body;
 
-  try {
-    // POSTされたメールアドレスと一致するユーザを探す
-    const user = await User.findOne({ email: email });
-    if (!user) {
-      return res.status(401).json({
-        errors: {
-          params: "email",
-          message: "メールアドレスが間違っています",
-        },
+    try {
+      // POSTされたメールアドレスと一致するユーザを探す
+      const user = await User.findOne({ email: email });
+      if (!user) {
+        return res.status(401).json({
+          errors: {
+            params: "email",
+            message: "メールアドレスが間違っています",
+          },
+        });
+      }
+
+      // パスワードを照合する
+      const decryptedPassword = CryptoJS.AES.decrypt(
+        user.password,
+        serverEnv.SECRET_KEY
+      ).toString(CryptoJS.enc.Utf8);
+
+      if (decryptedPassword !== password) {
+        return res.status(401).json({
+          errors: {
+            params: "password",
+            message: "パスワードが間違っています",
+          },
+        });
+      }
+
+      const token = JWT.sign({ id: user._id }, serverEnv.TOKEN_SECRET_KEY, {
+        expiresIn: "24h",
       });
+
+      return res.status(201).json({ user, token });
+    } catch (err) {
+      return res.status(500).json(err);
     }
-
-    // パスワードを照合する
-    const decryptedPassword = CryptoJS.AES.decrypt(
-      user.password,
-      serverEnv.SECRET_KEY
-    ).toString(CryptoJS.enc.Utf8);
-
-    if (decryptedPassword !== password) {
-      return res.status(401).json({
-        errors: {
-          params: "password",
-          message: "パスワードが間違っています",
-        },
-      });
-    }
-
-    const token = JWT.sign({ id: user._id }, serverEnv.TOKEN_SECRET_KEY, {
-      expiresIn: "24h",
-    });
-
-    return res.status(201).json({ user, token });
-  } catch (err) {
-    return res.status(500).json(err);
   }
-});
+);
 
 app.listen(PORT, () => {
   console.log("ローカルサーバ起動中");
