@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 
+// 認証関連のバリデーション
 export const validationUser = (
   req: Request,
   res: Response,
