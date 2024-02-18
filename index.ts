@@ -1,22 +1,28 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
 
-import express from "express";
-import { connectToDatabase } from "./src/v1/controller/connectToDatabase";
+import express from 'express';
+import { connectToDatabase } from './src/v1/controller/connectToDatabase';
+import cors from 'cors';
 
 const app = express();
 const PORT = 8000;
 
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+  })
+);
+
 app.use(express.json());
 
 // 認証API
-const authRouter = require("./src/v1/routes/auth");
-
-app.use("/api/v1", authRouter);
+const authRouter = require('./src/v1/routes/auth');
+app.use('/api/v1', authRouter);
 
 // DB接続
 connectToDatabase();
 
 app.listen(PORT, () => {
-  console.log("ローカルサーバ起動中");
+  console.log('ローカルサーバ起動中');
 });
