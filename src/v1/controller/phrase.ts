@@ -48,4 +48,16 @@ export const phrase = {
       res.status(500).json(err);
     }
   },
+  delete: async (req: any, res: Response) => {
+    const { phraseId } = req.params;
+    try {
+      const phrase = await Phrase.findOne({ _id: phraseId });
+      if (!phrase) return res.status(400).json('フレーズが存在しません');
+
+      await Phrase.deleteOne({ _id: phraseId });
+      res.status(200).json('フレーズを削除しました');
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
 };

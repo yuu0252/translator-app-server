@@ -10,5 +10,7 @@ router.post('/', verifyToken, phrase.create);
 router.get('/', verifyToken, phrase.getAll);
 // フレーズを編集
 router.put('/:phraseId', verifyToken, phrase.update);
+// フレーズを削除
+router.delete('/:phraseId', verifyToken, phrase.delete);
 
 module.exports = router;
