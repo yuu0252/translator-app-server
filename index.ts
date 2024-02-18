@@ -20,6 +20,10 @@ app.use(express.json());
 const authRouter = require('./src/v1/routes/auth');
 app.use('/api/v1', authRouter);
 
+// フレーズAPI
+const phraseRouter = require('./src/v1/routes/phrase');
+app.use('/api/v1/phrases', phraseRouter);
+
 // DB接続
 connectToDatabase();
 

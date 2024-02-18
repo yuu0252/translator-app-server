@@ -18,4 +18,4 @@ const phraseSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model<IPhrase>('Phrase', phraseSchema);
+export const Phrase = mongoose.model<IPhrase>('Phrase', phraseSchema);
