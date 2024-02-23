@@ -12,5 +12,7 @@ router.get('/', verifyToken, phrase.getAll);
 router.put('/:phraseId', verifyToken, phrase.update);
 // フレーズを削除
 router.delete('/:phraseId', verifyToken, phrase.delete);
+//フレーズの存在チェック
+router.post('/check', verifyToken, phrase.getOne);
 
 module.exports = router;

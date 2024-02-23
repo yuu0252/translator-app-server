@@ -26,6 +26,17 @@ export const phrase = {
       res.status(500).json(err);
     }
   },
+  getOne: async (req: any, res: Response) => {
+    try {
+      const phrase = await Phrase.findOne({
+        user: req.user._id,
+        title: req.body.title,
+      });
+      res.status(200).json(phrase);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
   update: async (req: any, res: Response) => {
     const { phraseId } = req.params;
     const { title } = req.body;
