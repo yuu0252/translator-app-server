@@ -3,10 +3,16 @@ const Schema = mongoose.Schema;
 
 interface IPhrase {
   user: string;
+  category: string;
   title: string;
 }
 
 const phraseSchema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   category: {
     type: Schema.Types.ObjectId,
     ref: "Catergory",

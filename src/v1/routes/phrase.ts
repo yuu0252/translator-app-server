@@ -1,18 +1,18 @@
-import { Router } from 'express';
-import { verifyToken } from '../middleWare/tokenHandler';
-import { phrase } from '../controller/phrase';
+import { Router } from "express";
+import { verifyToken } from "../middleWare/tokenHandler";
+import { phrase } from "../controller/phrase";
 
 const router = Router();
 
 // フレーズの新規作成
-router.post('/', verifyToken, phrase.create);
+router.post("/", verifyToken, phrase.create);
 // ユーザのフレーズを取得
-router.get('/', verifyToken, phrase.getAll);
+router.get("/", verifyToken, phrase.getAll);
 // フレーズを編集
-router.put('/:phraseId', verifyToken, phrase.update);
+router.put("/:phraseId", verifyToken, phrase.update);
 // フレーズを削除
-router.delete('/:phraseId', verifyToken, phrase.delete);
+router.delete("/:phraseId", verifyToken, phrase.delete);
 //フレーズの存在チェック
-router.post('/check', verifyToken, phrase.getOne);
+router.post("/check", verifyToken, phrase.checkExist);
 
 module.exports = router;

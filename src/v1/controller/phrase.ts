@@ -1,16 +1,17 @@
-import { Response } from 'express';
-import { Phrase } from '../models/Phrase';
+import { Response } from "express";
+import Phrase from "../models/Phrase";
 
 export const phrase = {
   // フレーズの新規作成
   create: async (req: any, res: Response) => {
     const { title } = req.body;
     try {
-      if (title.replace(/\r?\n/g, '') === '')
-        return res.status(400).json('タイトルは必須項目です');
+      if (title.replace(/\r?\n/g, "") === "")
+        return res.status(400).json("タイトルは必須項目です");
 
       const phrase = await Phrase.create({
         user: req.user._id,
+        category: req.body.category_id,
         title: req.body.title,
       });
       res.status(201).json(phrase);
@@ -20,19 +21,19 @@ export const phrase = {
   },
   getAll: async (req: any, res: Response) => {
     try {
-      const phrases = await Phrase.find({ user: req.user._id });
+      const phrases = await Phrase.find({ category: req.body.category_id });
       res.status(200).json(phrases);
     } catch (err) {
       res.status(500).json(err);
     }
   },
-  getOne: async (req: any, res: Response) => {
+  checkExist: async (req: any, res: Response) => {
     try {
-      const phrase = await Phrase.findOne({
-        user: req.user._id,
+      const phrases = await Phrase.find({
+        user: req.user_id,
         title: req.body.title,
       });
-      res.status(200).json(phrase);
+      res.status(200).json(phrases);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -41,14 +42,14 @@ export const phrase = {
     const { phraseId } = req.params;
     const { title } = req.body;
     try {
-      if (title.replace(/\r?\n/g, '') === '')
-        return res.status(400).json('タイトルは必須項目です');
+      if (title.replace(/\r?\n/g, "") === "")
+        return res.status(400).json("タイトルは必須項目です");
 
       const phrase = await Phrase.findOne({
-        user: req.user._id,
-        _id: phraseId,
+        category: req.body.category_id,
+        id: phraseId,
       });
-      if (!phrase) return res.status(404).json('フレーズが存在しません');
+      if (!phrase) return res.status(404).json("フレーズが存在しません");
 
       const updatedPhrase = await Phrase.findByIdAndUpdate(phraseId, {
         $set: req.body,
@@ -62,11 +63,11 @@ export const phrase = {
   delete: async (req: any, res: Response) => {
     const { phraseId } = req.params;
     try {
-      const phrase = await Phrase.findOne({ _id: phraseId });
-      if (!phrase) return res.status(400).json('フレーズが存在しません');
+      const phrase = await Phrase.findOne({ id: phraseId });
+      if (!phrase) return res.status(400).json("フレーズが存在しません");
 
-      await Phrase.deleteOne({ _id: phraseId });
-      res.status(200).json('フレーズを削除しました');
+      await Phrase.deleteOne({ id: phraseId });
+      res.status(200).json("フレーズを削除しました");
     } catch (err) {
       res.status(500).json(err);
     }

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 interface ICategory {
+  user: string;
   title: String;
 }
 
