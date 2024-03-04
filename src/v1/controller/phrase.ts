@@ -5,14 +5,16 @@ export const phrase = {
   // フレーズの新規作成
   create: async (req: any, res: Response) => {
     const { title } = req.body;
+    const { categoryId } = req.params;
+    console.log(req.params);
     try {
       if (title.replace(/\r?\n/g, "") === "")
         return res.status(400).json("タイトルは必須項目です");
 
       const phrase = await Phrase.create({
         user: req.user._id,
-        category: req.body.category_id,
-        title: req.body.title,
+        category: categoryId,
+        title: title,
       });
       res.status(201).json(phrase);
     } catch (err) {
@@ -21,7 +23,8 @@ export const phrase = {
   },
   getAll: async (req: any, res: Response) => {
     try {
-      const phrases = await Phrase.find({ category: req.body.category_id });
+      const { categoryId } = req.params;
+      const phrases = await Phrase.find({ category: categoryId });
       res.status(200).json(phrases);
     } catch (err) {
       res.status(500).json(err);
@@ -29,9 +32,10 @@ export const phrase = {
   },
   checkExist: async (req: any, res: Response) => {
     try {
+      const { title } = req.body;
       const phrases = await Phrase.find({
         user: req.user_id,
-        title: req.body.title,
+        title: title,
       });
       res.status(200).json(phrases);
     } catch (err) {
@@ -39,14 +43,14 @@ export const phrase = {
     }
   },
   update: async (req: any, res: Response) => {
-    const { phraseId } = req.params;
+    const { categoryId, phraseId } = req.params;
     const { title } = req.body;
     try {
       if (title.replace(/\r?\n/g, "") === "")
         return res.status(400).json("タイトルは必須項目です");
 
       const phrase = await Phrase.findOne({
-        category: req.body.category_id,
+        category: categoryId,
         id: phraseId,
       });
       if (!phrase) return res.status(404).json("フレーズが存在しません");

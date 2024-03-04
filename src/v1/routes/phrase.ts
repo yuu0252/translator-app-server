@@ -5,14 +5,14 @@ import { phrase } from "../controller/phrase";
 const router = Router();
 
 // フレーズの新規作成
-router.post("/", verifyToken, phrase.create);
+router.post("/:categoryId/phrases", verifyToken, phrase.create);
 // ユーザのフレーズを取得
-router.get("/", verifyToken, phrase.getAll);
+router.get("/:categoryId/phrases", verifyToken, phrase.getAll);
 // フレーズを編集
-router.put("/:phraseId", verifyToken, phrase.update);
+router.put("/:categoryId/phrases/:phraseId", verifyToken, phrase.update);
 // フレーズを削除
-router.delete("/:phraseId", verifyToken, phrase.delete);
+router.delete("/:categoryId/phrases/:phraseId", verifyToken, phrase.delete);
 //フレーズの存在チェック
-router.post("/check", verifyToken, phrase.checkExist);
+router.post("/:categoryId/phrases/check", verifyToken, phrase.checkExist);
 
 module.exports = router;

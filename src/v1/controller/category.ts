@@ -24,24 +24,7 @@ export const category = {
     try {
       const categories = await Category.find({ user: req.user._id });
 
-      const allPhrases = await Phrase.find({ user: req.user._id });
-
-      const result = Array(categories.length);
-
-      categories.forEach((category, i) => {
-        const phrases = allPhrases.filter(
-          (phrase) => phrase.category.toString() === category._id.toString()
-        );
-
-        result[i] = {
-          _id: category._id,
-          user: category.user,
-          title: category.title,
-          phrases: phrases,
-        };
-      });
-
-      res.status(200).json(result);
+      res.status(200).json(categories);
     } catch (err) {
       res.status(500).json(err);
     }

@@ -26,7 +26,7 @@ app.use("/api/v1/categories", categoryRouter);
 
 // フレーズAPI
 const phraseRouter = require("./src/v1/routes/phrase");
-app.use("/api/v1/phrases", phraseRouter);
+app.use("/api/v1/categories", phraseRouter);
 
 // DB接続
 connectToDatabase();
