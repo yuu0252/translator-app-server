@@ -6,7 +6,6 @@ export const phrase = {
   create: async (req: any, res: Response) => {
     const { title } = req.body;
     const { categoryId } = req.params;
-    console.log(req.params);
     try {
       if (title.replace(/\r?\n/g, "") === "")
         return res.status(400).json("タイトルは必須項目です");
@@ -24,7 +23,10 @@ export const phrase = {
   getAll: async (req: any, res: Response) => {
     try {
       const { categoryId } = req.params;
-      const phrases = await Phrase.find({ category: categoryId });
+      const phrases = await Phrase.find({
+        user: req.user._id,
+        category: categoryId,
+      });
       res.status(200).json(phrases);
     } catch (err) {
       res.status(500).json(err);
@@ -50,8 +52,9 @@ export const phrase = {
         return res.status(400).json("タイトルは必須項目です");
 
       const phrase = await Phrase.findOne({
+        user: req.user._id,
         category: categoryId,
-        id: phraseId,
+        _id: phraseId,
       });
       if (!phrase) return res.status(404).json("フレーズが存在しません");
 
@@ -65,12 +68,20 @@ export const phrase = {
     }
   },
   delete: async (req: any, res: Response) => {
-    const { phraseId } = req.params;
     try {
-      const phrase = await Phrase.findOne({ id: phraseId });
+      const { categoryId, phraseId } = req.params;
+      const phrase = await Phrase.findOne({
+        user: req.user._id,
+        _id: phraseId,
+        category: categoryId,
+      });
       if (!phrase) return res.status(400).json("フレーズが存在しません");
 
-      await Phrase.deleteOne({ id: phraseId });
+      await Phrase.deleteOne({
+        user: req.user._id,
+        _id: phraseId,
+        category: categoryId,
+      });
       res.status(200).json("フレーズを削除しました");
     } catch (err) {
       res.status(500).json(err);

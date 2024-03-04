@@ -16,7 +16,6 @@ export const category = {
       });
       res.status(201).json(category);
     } catch (err) {
-      console.log(err);
       res.status(500).json(err);
     }
   },
