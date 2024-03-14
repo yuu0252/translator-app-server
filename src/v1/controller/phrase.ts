@@ -6,6 +6,11 @@ export const phrase = {
   create: async (req: any, res: Response) => {
     const { title } = req.body;
     const { categoryId } = req.params;
+
+    if (!/^[0-9a-fA-F]{24}$/.test(categoryId)) {
+      return res.status(400).json("カテゴリIDが無効です");
+    }
+
     try {
       if (title.replace(/\r?\n/g, "") === "")
         return res.status(400).json("タイトルは必須項目です");
@@ -23,6 +28,11 @@ export const phrase = {
   getAll: async (req: any, res: Response) => {
     try {
       const { categoryId } = req.params;
+
+      if (!/^[0-9a-fA-F]{24}$/.test(categoryId)) {
+        return res.status(400).json("カテゴリIDが無効です");
+      }
+
       const phrases = await Phrase.find({
         user: req.user._id,
         category: categoryId,
@@ -46,6 +56,15 @@ export const phrase = {
   },
   update: async (req: any, res: Response) => {
     const { categoryId, phraseId } = req.params;
+
+    if (!/^[0-9a-fA-F]{24}$/.test(categoryId)) {
+      return res.status(400).json("カテゴリIDが無効です");
+    }
+
+    if (!/^[0-9a-fA-F]{24}$/.test(phraseId)) {
+      return res.status(400).json("フレーズIDが無効です");
+    }
+
     const { title } = req.body;
     try {
       if (title.replace(/\r?\n/g, "") === "")
@@ -70,6 +89,15 @@ export const phrase = {
   delete: async (req: any, res: Response) => {
     try {
       const { categoryId, phraseId } = req.params;
+
+      if (!/^[0-9a-fA-F]{24}$/.test(categoryId)) {
+        return res.status(400).json("カテゴリIDが無効です");
+      }
+
+      if (!/^[0-9a-fA-F]{24}$/.test(phraseId)) {
+        return res.status(400).json("フレーズIDが無効です");
+      }
+
       const phrase = await Phrase.findOne({
         user: req.user._id,
         _id: phraseId,

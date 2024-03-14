@@ -41,6 +41,11 @@ export const category = {
   },
   update: async (req: any, res: Response) => {
     const { categoryId } = req.params;
+
+    if (!/^[0-9a-fA-F]{24}$/.test(categoryId)) {
+      return res.status(400).json("カテゴリIDが無効です");
+    }
+
     const { title } = req.body;
     try {
       if (title.replace(/\r?\n/g, "") === "")
@@ -63,6 +68,11 @@ export const category = {
   },
   delete: async (req: any, res: Response) => {
     const { categoryId } = req.params;
+
+    if (!/^[0-9a-fA-F]{24}$/.test(categoryId)) {
+      return res.status(400).json("カテゴリIDが無効です");
+    }
+
     try {
       const category = await Category.findOne({ _id: categoryId });
       if (!category) return res.status(400).json("カテゴリーが存在しません");
