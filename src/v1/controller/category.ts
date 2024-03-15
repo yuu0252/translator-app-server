@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Category from '../models/Category';
+import Category from '../models/category';
 
 export const category = {
   // カテゴリの新規作成
@@ -8,6 +8,14 @@ export const category = {
     try {
       if (title.replace(/\r?\n/g, '') === '')
         return res.status(400).json('タイトルは必須項目です');
+
+      const isExist = await Category.findOne({
+        user: req.user._id,
+        title: req.body.title,
+      });
+
+      if (isExist)
+        return res.status(409).json('このカテゴリ名は既に存在しています');
 
       const category = await Category.create({
         user: req.user._id,

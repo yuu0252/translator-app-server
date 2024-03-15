@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 interface IPhrase {
@@ -10,12 +10,12 @@ interface IPhrase {
 const phraseSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   category: {
     type: Schema.Types.ObjectId,
-    ref: "Catergory",
+    ref: 'Catergory',
     required: true,
   },
   title: {
@@ -24,5 +24,5 @@ const phraseSchema = new Schema({
   },
 });
 
-const Phrase = mongoose.model<IPhrase>("Phrase", phraseSchema);
+const Phrase = mongoose.model<IPhrase>('Phrase', phraseSchema);
 export default Phrase;
