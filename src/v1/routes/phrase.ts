@@ -13,6 +13,6 @@ router.put("/:categoryId/phrases/:phraseId", verifyToken, phrase.update);
 // フレーズを削除
 router.delete("/:categoryId/phrases/:phraseId", verifyToken, phrase.delete);
 //フレーズの存在チェック
-router.post("/:categoryId/phrases/check", verifyToken, phrase.checkExist);
+router.post("/phrases/check", verifyToken, phrase.checkExist);
 
 module.exports = router;
