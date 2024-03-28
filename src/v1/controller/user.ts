@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import User from "../models/User";
+import User from "../models/user";
 import CryptoJS from "crypto-js";
 import JWT from "jsonwebtoken";
 import { serverEnv } from "../../../serverEnv";
 
 export const userRegister = async (req: Request, res: Response) => {
-  const password = req.body.password;
   try {
+    const password = req.body.password;
     // パスワードを暗号化してユーザとトークンを返す
     req.body.password = CryptoJS.AES.encrypt(password, serverEnv.SECRET_KEY);
     const user = await User.create(req.body);
@@ -20,10 +20,9 @@ export const userRegister = async (req: Request, res: Response) => {
 };
 
 export const userLogin = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-
   try {
     // POSTされたメールアドレスと一致するユーザを探す
+    const { email, password } = req.body;
     const user = await User.findOne({ email: email });
     if (!user) {
       return res.status(401).json({
