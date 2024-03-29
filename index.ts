@@ -6,11 +6,10 @@ import { connectToDatabase } from "./src/v1/controller/connectToDatabase";
 import cors from "cors";
 
 const app = express();
-const PORT = 8000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:3000"],
   })
 );
 
@@ -30,6 +29,8 @@ app.use("/api/v1/categories", phraseRouter);
 
 // DB接続
 connectToDatabase();
+
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
   console.log("ローカルサーバ起動中");
