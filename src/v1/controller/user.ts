@@ -13,7 +13,7 @@ export const userRegister = async (req: Request, res: Response) => {
     const token = JWT.sign({ id: user._id }, serverEnv.TOKEN_SECRET_KEY, {
       expiresIn: "24h",
     });
-    return res.status(200).json({ user, token });
+    return res.status(201).json({ user, token });
   } catch (err) {
     return res.status(500).json(err);
   }
@@ -52,7 +52,7 @@ export const userLogin = async (req: Request, res: Response) => {
       expiresIn: "24h",
     });
 
-    return res.status(201).json({ user, token });
+    return res.status(200).json({ user, token });
   } catch (err) {
     return res.status(500).json(err);
   }
