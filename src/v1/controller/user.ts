@@ -11,7 +11,7 @@ export const userRegister = async (req: Request, res: Response) => {
     req.body.password = CryptoJS.AES.encrypt(password, serverEnv.SECRET_KEY);
     const user = await User.create(req.body);
     const token = JWT.sign({ id: user._id }, serverEnv.TOKEN_SECRET_KEY, {
-      expiresIn: "24h",
+      expiresIn: 2592000000,
     });
     return res.status(201).json({ user, token });
   } catch (err) {
@@ -49,7 +49,7 @@ export const userLogin = async (req: Request, res: Response) => {
     }
 
     const token = JWT.sign({ id: user._id }, serverEnv.TOKEN_SECRET_KEY, {
-      expiresIn: "24h",
+      expiresIn: 2592000000,
     });
 
     return res.status(200).json({ user, token });
