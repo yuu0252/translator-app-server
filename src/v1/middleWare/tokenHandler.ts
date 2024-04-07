@@ -21,7 +21,7 @@ const tokenDecode = (req: Request) => {
 };
 
 export const verifyToken = async (
-  req: any,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {

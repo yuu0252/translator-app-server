@@ -9,7 +9,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://multi-translator.com"],
+    origin: ["https://multi-translator.com", "http://localhost:3000"],
   })
 );
 
