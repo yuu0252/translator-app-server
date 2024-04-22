@@ -4,12 +4,13 @@ dotenv.config();
 import express from "express";
 import { connectToDatabase } from "./src/v1/controller/connectToDatabase";
 import cors from "cors";
+import { serverEnv } from "./serverEnv";
 
 const app = express();
 
 app.use(
   cors({
-    origin: ["https://multi-translator.com", "http://localhost:3000"],
+    origin: [serverEnv.ORIGIN],
   })
 );
 
