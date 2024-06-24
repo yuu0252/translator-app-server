@@ -44,7 +44,6 @@ router.post(
 
 // JWT認証API
 router.post("/verify-token", verifyToken, (req: any, res: Response) => {
-  console.log(req);
   return res.status(200).json({ user: req.user });
 });
 
